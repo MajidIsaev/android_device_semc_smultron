@@ -3,7 +3,7 @@ name: Build Android Firmware
 on:
   push:
     branches:
-      - main
+      - cm-13.0
 
 jobs:
   build:
