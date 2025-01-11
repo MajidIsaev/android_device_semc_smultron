@@ -1,0 +1,40 @@
+name: Build Android Firmware
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-8-jdk git-core gnupg flex bison gperf squashfs-tools build-essential zip curl libxml2-utils xsltproc fontconfig libncurses5-dev x11proto-core-dev libx11-dev libgl1-mesa-dev
+
+      - name: Clone Source Code
+        run: |
+          mkdir ~/android
+          cd ~/android
+          repo init -u https://github.com/LegacyXperia/android.git -b cm-13.0
+          repo sync
+
+      - name: Clone Device Tree
+        run: |
+          cd ~/android/device
+          git clone https://github.com/LegacyXperia/android_device_semc_smultron.git semc/smultron
+
+      - name: Start Build
+        run: |
+          cd ~/android
+          . build/envsetup.sh
+          lunch cm_smultron-userdebug
+          make -j$(nproc) bacon
+
+      - name: Upload Build
+        uses: actions/upload-artifact@v3
+        with:
+          name: smultron-build
+          path: ~/android/out/target/product/smultron/*.zip
