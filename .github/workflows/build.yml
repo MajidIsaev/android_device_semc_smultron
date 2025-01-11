@@ -12,14 +12,24 @@ jobs:
       - name: Set up environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y openjdk-8-jdk git-core gnupg flex bison gperf squashfs-tools build-essential zip curl libxml2-utils xsltproc fontconfig libncurses5-dev x11proto-core-dev libx11-dev libgl1-mesa-dev
+          sudo apt-get install -y openjdk-8-jdk git-core gnupg flex bison gperf squashfs-tools \
+          build-essential zip curl libxml2-utils xsltproc fontconfig libncurses5-dev \
+          x11proto-core-dev libx11-dev libgl1-mesa-dev wget
+
+      - name: Install repo tool
+        run: |
+          mkdir -p ~/bin
+          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+          chmod a+x ~/bin/repo
+          echo 'export PATH=~/bin:$PATH' >> ~/.bashrc
+          source ~/.bashrc
 
       - name: Clone Source Code
         run: |
           mkdir ~/android
           cd ~/android
-          repo init -u https://github.com/LegacyXperia/android.git -b cm-13.0
-          repo sync
+          ~/bin/repo init -u https://github.com/LegacyXperia/android.git -b cm-13.0
+          ~/bin/repo sync
 
       - name: Clone Device Tree
         run: |
