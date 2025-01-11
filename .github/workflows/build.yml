@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir ~/android
           cd ~/android
-          ~/bin/repo init -u https://github.com/LegacyXperia/android.git -b cm-13.0
+          ~/bin/repo init -u https://github.com/MajidIsaev/android_device_semc_smultron.git -b cm-13.0
           ~/bin/repo sync
 
       - name: Clone Device Tree
